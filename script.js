@@ -1,7 +1,7 @@
 const TOTAL = 28;
 
-// Link do vídeo do slide do Cateterismo (abre em nova aba). Cole a URL entre as aspas.
-const VIDEO_URL = '';
+// Link do vídeo do slide do Cateterismo (abre em nova aba). Abre o vídeo em uma nova aba.
+const VIDEO_URL = 'video.html';
 const VIDEO_SLIDE = 27;
 
 const stage = document.getElementById('stage');
