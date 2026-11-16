@@ -1,0 +1,79 @@
+* { box-sizing: border-box; }
+html, body { width: 100%; height: 100%; margin: 0; }
+body {
+  background: #0b1220;
+  color: #fff;
+  font-family: Arial, Helvetica, sans-serif;
+  overflow: hidden;
+  display: grid;
+  place-items: center;
+  user-select: none;
+}
+
+/* Palco 16:9 que sempre cabe na tela */
+.stage {
+  position: relative;
+  width: min(100vw, calc(100vh * 16 / 9));
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  background: #ffe6da;
+}
+.slide {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  object-fit: contain;
+  visibility: hidden;
+  -webkit-user-drag: none;
+}
+.slide.is-active { visibility: visible; z-index: 1; }
+
+/* Botões laterais */
+.nav {
+  position: fixed; top: 50%;
+  width: 48px; height: 48px; margin-top: -24px;
+  border: 0; border-radius: 50%;
+  background: rgba(11, 18, 32, .75); color: #fff;
+  font-size: 30px; line-height: 1; padding: 0 0 4px;
+  cursor: pointer; z-index: 5;
+}
+.nav:hover { background: rgba(11, 18, 32, .95); }
+.nav:disabled { opacity: .2; cursor: default; }
+#prev { left: 12px; }
+#next { right: 12px; }
+
+/* Contador e progresso */
+.hud {
+  position: fixed; left: 50%; bottom: 14px; transform: translateX(-50%);
+  display: flex; align-items: center; gap: 12px;
+  padding: 8px 10px 8px 16px;
+  border-radius: 999px;
+  background: rgba(11, 18, 32, .75);
+  font-size: 13px; z-index: 6;
+}
+#counter { min-width: 58px; text-align: center; font-variant-numeric: tabular-nums; }
+.track { width: 140px; height: 4px; border-radius: 4px; background: rgba(255, 255, 255, .25); overflow: hidden; }
+#bar { height: 100%; width: 0; background: #e0525c; }
+.full {
+  width: 30px; height: 30px; border: 0; border-radius: 50%;
+  background: rgba(255, 255, 255, .12); color: #fff; font-size: 16px; cursor: pointer;
+}
+.full:hover { background: rgba(255, 255, 255, .25); }
+
+/* Botão do vídeo (slide do Cateterismo) */
+.video-hit {
+  position: absolute; display: none; z-index: 3;
+  left: 35.8%; top: 15.9%; width: 26.9%; height: 80.1%;
+  align-items: center; justify-content: center;
+  color: #fff; text-decoration: none; cursor: pointer;
+}
+.video-hit.show { display: flex; }
+.video-hit span {
+  padding: 12px 20px; border-radius: 999px;
+  background: rgba(0, 0, 0, .6); font-weight: 700; font-size: 16px;
+}
+.video-hit:hover span { background: rgba(224, 82, 92, .95); }
+
+@media (max-width: 600px) {
+  .nav { width: 40px; height: 40px; margin-top: -20px; font-size: 26px; }
+  .track { width: 80px; }
+}

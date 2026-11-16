@@ -3,166 +3,25 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="theme-color" content="#101827" />
   <title>Procedimentos Cardiovasculares — Apresentação</title>
-  <style>
-    * { box-sizing: border-box; }
-    html, body { width: 100%; height: 100%; margin: 0; }
-    body {
-      background: #101827;
-      color: #fff;
-      font-family: Arial, Helvetica, sans-serif;
-      overflow: hidden;
-      display: grid;
-      place-items: center;
-    }
-    .presentation {
-      position: relative;
-      width: 100vw;
-      height: 100vh;
-      display: grid;
-      place-items: center;
-      background: #101827;
-    }
-    .slide-frame {
-      width: 100%; height: 100%;
-      display: grid; place-items: center;
-      overflow: hidden;
-    }
-    #slideImage {
-      display: block;
-      max-width: 100%; max-height: 100%;
-      width: 100%; height: 100%;
-      object-fit: contain;
-      user-select: none;
-      -webkit-user-drag: none;
-    }
-    .nav-button {
-      position: absolute;
-      top: 50%; transform: translateY(-50%);
-      width: clamp(42px, 5vw, 66px);
-      height: clamp(58px, 8vw, 86px);
-      border: 1px solid rgba(255,255,255,.22);
-      border-radius: 14px;
-      background: rgba(12, 22, 38, .62);
-      color: #fff;
-      display: grid; place-items: center;
-      cursor: pointer;
-      z-index: 5;
-      transition: background .2s, transform .2s, opacity .2s;
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
-    }
-    .nav-button:hover { background: rgba(12,22,38,.9); transform: translateY(-50%) scale(1.06); }
-    .nav-button:active { transform: translateY(-50%) scale(.96); }
-    .nav-button:disabled { opacity: .22; cursor: default; }
-    .nav-button:disabled:hover { transform: translateY(-50%); background: rgba(12,22,38,.62); }
-    .nav-button svg { width: 30px; height: 30px; }
-    #prevButton { left: clamp(10px, 2vw, 28px); }
-    #nextButton { right: clamp(10px, 2vw, 28px); }
-    .hud {
-      position: absolute;
-      left: 50%; bottom: 18px; transform: translateX(-50%);
-      display: flex; align-items: center; gap: 14px;
-      padding: 9px 15px;
-      border: 1px solid rgba(255,255,255,.15);
-      border-radius: 999px;
-      background: rgba(12,22,38,.72);
-      color: rgba(255,255,255,.9);
-      font-size: 13px;
-      letter-spacing: .04em;
-      z-index: 6;
-      backdrop-filter: blur(8px);
-    }
-    #counter { min-width: 62px; text-align: center; font-variant-numeric: tabular-nums; }
-    .progress-track { width: clamp(70px, 13vw, 170px); height: 4px; border-radius: 5px; background: rgba(255,255,255,.22); overflow: hidden; }
-    #progress { height: 100%; width: 0; background: #79c8d5; transition: width .25s ease; }
-    .hint {
-      position: absolute; top: 16px; left: 50%; transform: translateX(-50%);
-      color: rgba(255,255,255,.62); font-size: 11px;
-      letter-spacing: .08em; text-transform: uppercase;
-      z-index: 4; white-space: nowrap;
-    }
-    @media (max-width: 600px) {
-      .nav-button { width: 42px; height: 58px; border-radius: 11px; }
-      .nav-button svg { width: 24px; height: 24px; }
-      #prevButton { left: 7px; } #nextButton { right: 7px; }
-      .hud { bottom: 10px; gap: 9px; padding: 8px 12px; }
-      .hint { top: 10px; font-size: 9px; }
-    }
-  </style>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <main class="presentation" aria-label="Apresentação de procedimentos cardiovasculares">
-    <div class="hint">Use as setas laterais ou as teclas ← → para navegar</div>
-    <div class="slide-frame">
-      <img id="slideImage" src="slides/slide-01.png" alt="Slide 1 de 28" draggable="false" />
-    </div>
-
-    <button class="nav-button" id="prevButton" type="button" aria-label="Voltar para o slide anterior" title="Slide anterior">
-      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M15 18 9 12l6-6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
-    </button>
-    <button class="nav-button" id="nextButton" type="button" aria-label="Avançar para o próximo slide" title="Próximo slide">
-      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m9 18 6-6-6-6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
-    </button>
-
-    <div class="hud" aria-live="polite">
-      <span id="counter">01 / 28</span>
-      <div class="progress-track" aria-hidden="true"><div id="progress"></div></div>
-    </div>
+  <main class="stage" id="stage" aria-label="Apresentação de procedimentos cardiovasculares">
+    <a class="video-hit" id="videoHit" target="_blank" rel="noopener noreferrer" aria-label="Abrir vídeo em nova aba">
+      <span>▶ Assistir ao vídeo</span>
+    </a>
   </main>
 
-  <script>
-    // Cada página do PDF foi convertida em uma imagem estática.
-    const TOTAL_SLIDES = 28;
-    let currentSlide = 1;
+  <button class="nav" id="prev" type="button" aria-label="Slide anterior" title="Anterior (←)">‹</button>
+  <button class="nav" id="next" type="button" aria-label="Próximo slide" title="Próximo (→)">›</button>
 
-    const slideImage = document.getElementById('slideImage');
-    const counter = document.getElementById('counter');
-    const progress = document.getElementById('progress');
-    const prevButton = document.getElementById('prevButton');
-    const nextButton = document.getElementById('nextButton');
+  <div class="hud">
+    <span id="counter">01 / 28</span>
+    <div class="track" aria-hidden="true"><div id="bar"></div></div>
+    <button class="full" id="full" type="button" aria-label="Tela cheia" title="Tela cheia (F)">⛶</button>
+  </div>
 
-    function showSlide(number) {
-      currentSlide = Math.max(1, Math.min(TOTAL_SLIDES, number));
-      const formatted = String(currentSlide).padStart(2, '0');
-      slideImage.src = `slides/slide-${formatted}.png`;
-      slideImage.alt = `Slide ${currentSlide} de ${TOTAL_SLIDES}`;
-      counter.textContent = `${formatted} / ${TOTAL_SLIDES}`;
-      progress.style.width = `${(currentSlide / TOTAL_SLIDES) * 100}%`;
-      prevButton.disabled = currentSlide === 1;
-      nextButton.disabled = currentSlide === TOTAL_SLIDES;
-    }
-
-    function nextSlide() { if (currentSlide < TOTAL_SLIDES) showSlide(currentSlide + 1); }
-    function previousSlide() { if (currentSlide > 1) showSlide(currentSlide - 1); }
-
-    prevButton.addEventListener('click', previousSlide);
-    nextButton.addEventListener('click', nextSlide);
-
-    document.addEventListener('keydown', (event) => {
-      if (event.key === 'ArrowRight' || event.key === 'PageDown' || event.key === ' ') {
-        event.preventDefault(); nextSlide();
-      } else if (event.key === 'ArrowLeft' || event.key === 'PageUp') {
-        event.preventDefault(); previousSlide();
-      } else if (event.key === 'Home') {
-        showSlide(1);
-      } else if (event.key === 'End') {
-        showSlide(TOTAL_SLIDES);
-      }
-    });
-
-    // Navegação por gesto em celulares e tablets.
-    let touchStartX = 0;
-    document.addEventListener('touchstart', (event) => {
-      touchStartX = event.changedTouches[0].screenX;
-    }, { passive: true });
-    document.addEventListener('touchend', (event) => {
-      const distance = event.changedTouches[0].screenX - touchStartX;
-      if (Math.abs(distance) > 55) distance < 0 ? nextSlide() : previousSlide();
-    }, { passive: true });
-
-    showSlide(1);
-  </script>
+  <script src="script.js"></script>
 </body>
 </html>
